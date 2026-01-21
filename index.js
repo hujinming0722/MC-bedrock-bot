@@ -1,0 +1,132 @@
+const fs = require('fs');
+const { createClient } = require('bedrock-protocol');
+
+class MinecraftBot {
+    constructor() {
+        this.config = this.loadConfig();
+        this.client = null;
+        this.targetPlayer = null;
+    }
+
+    loadConfig() {
+        try {
+            const configData = fs.readFileSync('./config.json', 'utf8');
+            return JSON.parse(configData);
+        } catch (error) {
+            console.error('Failed to load config:', error);
+            process.exit(1);
+        }
+    }
+
+    connect() {
+        console.log('Attempting to connect to server...');
+        console.log(`Server: ${this.config.serverAddress}:${this.config.serverPort}`);
+        
+        const connectTimeout = setTimeout(() => {
+            console.error('Connection timeout: Server not responding after 2 minutes');
+            process.exit(1);
+        }, 120000);
+
+        this.client = createClient({
+            host: this.config.serverAddress,
+            port: this.config.serverPort,
+            username: this.config.botName,
+            offline: false,
+            version: '1.21.93',
+            debug: true,
+            skipPing: true
+        });
+
+        this.client.on('connect', () => {
+            clearTimeout(connectTimeout);
+            console.log('Connected to server');
+        });
+
+        this.client.on('spawn', () => {
+            clearTimeout(connectTimeout);
+            console.log('Bot spawned');
+        });
+
+        this.client.on('packet', (packet) => {
+            this.handlePacket(packet);
+        });
+
+        this.client.on('disconnect', () => {
+            clearTimeout(connectTimeout);
+            console.log('Disconnected from server');
+        });
+
+        this.client.on('error', (error) => {
+            clearTimeout(connectTimeout);
+            console.error('Error:', error);
+        });
+
+        this.client.on('login', () => {
+            clearTimeout(connectTimeout);
+            console.log('Login successful');
+        });
+
+        this.client.on('encryption_begin', () => {
+            console.log('Encryption started');
+        });
+
+        this.client.on('resource_pack_info', () => {
+            console.log('Resource pack info received');
+        });
+
+        this.client.on('connect_allowed', () => {
+            clearTimeout(connectTimeout);
+            console.log('Connection allowed');
+        });
+
+        this.client.on('server_info', () => {
+            clearTimeout(connectTimeout);
+            console.log('Server info received');
+        });
+    }
+
+    handlePacket(packet) {
+        if (this.config.followPlayer && this.config.targetPlayer) {
+            if (packet.name === 'move_player' && packet.params.runtime_entity_id) {
+                this.handleMovePlayer(packet);
+            } else if (packet.name === 'player_list' && packet.params.entries) {
+                this.handlePlayerList(packet);
+            }
+        }
+    }
+
+    handlePlayerList(packet) {
+        const entries = packet.params.entries;
+        for (const entry of entries) {
+            if (entry.name === this.config.targetPlayer) {
+                this.targetPlayer = entry;
+                console.log(`Found target player: ${this.config.targetPlayer}`);
+                break;
+            }
+        }
+    }
+
+    handleMovePlayer(packet) {
+        if (this.targetPlayer && packet.params.runtime_entity_id) {
+            this.client.write('move_player', {
+                runtime_entity_id: this.client.entityId,
+                position: packet.params.position,
+                rotation: packet.params.rotation,
+                mode: 0,
+                on_ground: true
+            });
+        }
+    }
+
+    start() {
+        console.log(`Starting bot with name: ${this.config.botName}`);
+        console.log(`Connecting to: ${this.config.serverAddress}:${this.config.serverPort}`);
+        if (this.config.followPlayer) {
+            console.log(`Will follow player: ${this.config.targetPlayer}`);
+        }
+        this.connect();
+    }
+}
+
+const bot = new MinecraftBot();
+bot.start();

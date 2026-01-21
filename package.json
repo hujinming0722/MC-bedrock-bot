@@ -1,0 +1,13 @@
+{
+  "name": "minecraft-bedrock-bot",
+  "version": "1.0.0",
+  "description": "Minecraft Bedrock Edition bot that can follow players",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "bedrock-protocol": "latest",
+    "fs-extra": "^11.2.0"
+  }
+}

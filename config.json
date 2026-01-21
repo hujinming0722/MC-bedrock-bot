@@ -1,0 +1,7 @@
+{
+  "botName": "FollowerBot",
+  "serverAddress": "play.simpfun.cn",
+  "serverPort": 21999,
+  "followPlayer": false,
+  "targetPlayer": ""
+}
