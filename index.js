@@ -13,7 +13,7 @@ class MinecraftBot {
             const configData = fs.readFileSync('./config.json', 'utf8');
             return JSON.parse(configData);
         } catch (error) {
-            console.error('Failed to load config:', error);
+            console.error('Failed to load config,please check "config.json" at software directory:', error);
             process.exit(1);
         }
     }
@@ -31,8 +31,8 @@ class MinecraftBot {
             host: this.config.serverAddress,
             port: this.config.serverPort,
             username: this.config.botName,
-            offline: false,
-            version: '1.21.93',
+            offline: this.config.offlineMode,
+            version: this.config.gameVersion,
             debug: true,
             skipPing: true
         });

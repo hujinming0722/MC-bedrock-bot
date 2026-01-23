@@ -33,7 +33,7 @@ npm install
   "botName": "FollowerBot",      // 假人的名称
   "serverAddress": "play.simpfun.cn",  // 服务器地址
   "serverPort": 23473,            // 服务器端口
-  "followPlayer": false,          // 是否跟随其他玩家
+  "followPlayer": false,          // 是否跟随其他玩家，此功能已被弃用
   "targetPlayer": ""              // 目标玩家的名称
 }
 ```

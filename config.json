@@ -1,7 +1,9 @@
 {
   "botName": "FollowerBot",
+  "offlineMode": false,
   "serverAddress": "play.simpfun.cn",
   "serverPort": 21999,
+  "gameVersion": "1.21.93",
   "followPlayer": false,
   "targetPlayer": ""
 }
