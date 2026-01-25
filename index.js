@@ -34,7 +34,7 @@ class MinecraftBot {
             offline: this.config.offlineMode,
             version: this.config.gameVersion,
             debug: true,
-            skipPing: true
+            skipPing: true,
         });
 
         this.client.on('connect', () => {
@@ -94,8 +94,9 @@ class MinecraftBot {
             }
         }
     }
-
+    /*
     handlePlayerList(packet) {
+        console.log('Received player list packet:', packet.params.entries);
         const entries = packet.params.entries;
         for (const entry of entries) {
             if (entry.name === this.config.targetPlayer) {
@@ -107,16 +108,17 @@ class MinecraftBot {
     }
 
     handleMovePlayer(packet) {
+        console.log('Received move player packet:', packet.params);
+        console.log('Bot entityId:', this.client.entityId);
         if (this.targetPlayer && packet.params.runtime_entity_id) {
-            this.client.write('move_player', {
-                runtime_entity_id: this.client.entityId,
+            contime_entity_id: this.client.entityId,
                 position: packet.params.position,
                 rotation: packet.params.rotation,
                 mode: 0,
                 on_ground: true
             });
         }
-    }
+    }*/
 
     start() {
         console.log(`Starting bot with name: ${this.config.botName}`);
