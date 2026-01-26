@@ -5,7 +5,6 @@ class MinecraftBot {
     constructor() {
         this.config = this.loadConfig();
         this.client = null;
-        this.targetPlayer = null;
     }
 
     loadConfig() {
@@ -47,9 +46,6 @@ class MinecraftBot {
             console.log('Bot spawned');
         });
 
-        this.client.on('packet', (packet) => {
-            this.handlePacket(packet);
-        });
 
         this.client.on('disconnect', () => {
             clearTimeout(connectTimeout);
@@ -85,15 +81,7 @@ class MinecraftBot {
         });
     }
 
-    handlePacket(packet) {
-        if (this.config.followPlayer && this.config.targetPlayer) {
-            if (packet.name === 'move_player' && packet.params.runtime_entity_id) {
-                this.handleMovePlayer(packet);
-            } else if (packet.name === 'player_list' && packet.params.entries) {
-                this.handlePlayerList(packet);
-            }
-        }
-    }
+    
     /*
     handlePlayerList(packet) {
         console.log('Received player list packet:', packet.params.entries);

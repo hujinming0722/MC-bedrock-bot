@@ -2,9 +2,6 @@
   "botName": "FollowerBot",
   "offlineMode": true,
   "serverAddress": "play.simpfun.cn",
-  "serverPort": 31871,
-  "gameVersion": "1.21.93",
-  "followPlayer": false,
-  "targetPlayer": ""
-
+  "serverPort": 21999,
+  "gameVersion": "1.21.93"
 }
